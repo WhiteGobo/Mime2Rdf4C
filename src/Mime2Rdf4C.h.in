@@ -1,0 +1,88 @@
+#pragma once
+
+#include <CInterfaceOxJsonld.h>
+
+#include <stdio.h>
+#include <stdint.h>
+
+#ifndef RDF_TERMTYPE_DEFINED
+#define RDF_TERMTYPE_DEFINED
+typedef enum {
+        URI = 0,
+        BNODE = 1,
+        TYPEDLITERAL = 2,
+        LANGLITERAL = 3
+} TERMTYPE;
+#endif
+
+static const char* Mime2Rdf4C_Parser_List[] = {
+	"application/json",
+	"text/nquads",
+	NULL,
+};
+
+
+typedef struct mime2Rdf4C_ParserConfig Mime2Rdf4C_ParserConfig;
+typedef struct mime2Rdf4C_SerializerConfig Mime2Rdf4C_SerializerConfig;
+
+#ifndef TRIPLEHANDLER_DEFINED
+#define TRIPLEHANDLER_DEFINED
+/*
+ * Use TERMTYPE for subject_type, object_type and graph_type.
+ * If graphid is NULL, the default graph is used.
+ */
+typedef int8_t TripleHandler(
+                const char* subject, uint8_t subject_type,
+                const char* predicate,
+                const char* object, const char* object_suffix,
+                uint8_t object_type,
+                const char* graphid, uint8_t graph_type,
+                void* user);
+
+#endif //TRIPLEHANDLER_DEFINED
+
+#ifdef __cplusplus
+//namespace: CInterfaceOxJsonld
+extern "C" {
+#endif
+
+Mime2Rdf4C_ParserConfig* Mime2Rdf4C_get_parser_from_ext(const char* ext);
+Mime2Rdf4C_ParserConfig* Mime2Rdf4C_get_parser_from_mediatype(const char* type);
+void free_Mime2Rdf4CParserConfig(Mime2Rdf4C_ParserConfig*);
+
+/**
+ * Use to enable arbitrary options, only specified by string
+ */
+int Mime2Rdf4C_set_option(Mime2Rdf4C_ParserConfig*, const char* option, const char* value);
+
+int Mime2Rdf4C_set_baseiri(Mime2Rdf4C_ParserConfig*, const char*);
+
+int Mime2Rdf4C_enable_LoadDocumentCallback_over_http(
+					Mime2Rdf4C_ParserConfig*);
+int Mime2Rdf4C_enable_LoadDocumentCallback_for_localfiles(
+					Mime2Rdf4C_ParserConfig*);
+int Mime2Rdf4C_enable_LoadDocumentCallback_for_relativefiles(
+					Mime2Rdf4C_ParserConfig*,
+					const char *baseuri_c,
+					const char *basepath_c);
+
+int64_t Mime2Rdf4C_parse(
+		const char *input, TripleHandler hook,
+		void* hook_data, Mime2Rdf4C_ParserConfig* config);
+
+
+
+Mime2Rdf4C_SerializerConfig* Mime2Rdf4C_get_serializer_from_ext(const char* ext);
+Mime2Rdf4C_SerializerConfig* Mime2Rdf4C_get_serializer_from_mediatype(const char* type);
+int64_t Mime2Rdf4C_add(const char* subject, uint8_t subject_type,
+                const char* predicate,
+                const char* object, const char* object_suffix,
+                uint8_t object_type,
+                const char* graph_id, uint8_t graph_type,
+                Mime2Rdf4C_SerializerConfig* serializer);
+
+char* Mime2Rdf4C_finish(Mime2Rdf4C_SerializerConfig* config);
+
+#ifdef __cplusplus
+}
+#endif

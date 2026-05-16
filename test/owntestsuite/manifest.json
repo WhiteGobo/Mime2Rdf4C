@@ -1,0 +1,46 @@
+{
+  "@context": ["context.jsonld", {"@base": "toRdf-manifest"}],
+  "@id": "",
+  "@type": "mf:Manifest",
+  "name": "rountrip test",
+  "description": "",
+  "baseIri": "https://WhiteGobo.github.io/Mime2Rdf4C/test/owntestsuite/",
+  "sequence": [
+    {
+      "@id": "#t0001",
+      "@type": ["m2rdf4c:RoundtripTest"],
+      "name": "qq1",
+      "purpose": "basictest",
+      "input": "roundtrip/0001-in.nq",
+      "inputtype": "text/nquads"
+    }, {
+      "@id": "#t0003",
+      "@type": ["m2rdf4c:RoundtripTest"],
+      "name": "qq3",
+      "purpose": "basictest",
+      "input": "roundtrip/0003-in.nq",
+      "inputtype": "text/nquads"
+    }, {
+      "@id": "#t0004",
+      "@type": ["m2rdf4c:RoundtripTest"],
+      "name": "qq4",
+      "purpose": "basictest",
+      "input": "roundtrip/0004-in.nq",
+      "inputtype": "text/nquads"
+    }, {
+      "@id": "#t0005",
+      "@type": ["m2rdf4c:RoundtripTest"],
+      "name": "qq5",
+      "purpose": "basictest",
+      "input": "roundtrip/0005-in.nq",
+      "inputtype": "text/nquads"
+    }, {
+      "@id": "#t0027",
+      "@type": ["m2rdf4c:RoundtripTest"],
+      "name": "Simple named graph (Wikidata)",
+      "purpose": "Multiple graphs.",
+      "input": "roundtrip/0027-in.nq",
+      "inputtype": "text/nquads"
+    }
+  ]
+}

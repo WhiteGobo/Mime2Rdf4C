@@ -1,0 +1,16 @@
+{
+"@context": {
+	"@vocab":   "https://WhiteGobo.github.io/Mime2Rdf4C/vocab#",
+	"m2rdf4c":      "https://WhiteGobo.github.io/Mime2Rdf4C/vocab#",
+	"mf":       "https://WhiteGobo.github.io/Mime2Rdf4C/manifest#",
+	"dcterms":  "http://purl.org/dc/terms/",
+	"rdfs":     "http://www.w3.org/2000/01/rdf-schema#",
+	"xsd":      "http://www.w3.org/2001/XMLSchema#",
+	"sequence": {"@id": "mf:entries", "@type": "@id", "@container": "@list"},
+	"name": "http://schema.org/name",
+	"purpose": "http://schema.org/description",
+	"input": "mf:input",
+	"baseIRI": {"@id": "tsc:baseIRI", "@type": "@id"},
+	"inputtype": "mf:inputtype"
+}
+}
