@@ -31,13 +31,13 @@ static Mime2Rdf4C_SerializerConfig* Mime2Rdf4C_get_serializer(SERIALIZERTYPE t);
 
 Mime2Rdf4C_SerializerConfig* Mime2Rdf4C_get_serializer_from_ext(const char* ext)
 {
-	if(strcmp(ext, "json") || strcmp(ext, "jsonld")){
+	if(0==strcmp(ext, "json") || 0==strcmp(ext, "jsonld")){
 		return Mime2Rdf4C_get_serializer(SERIALIZERTYPE_JSONLD);
 	} else if (0==strcmp(ext, "ttl")) {
 		return Mime2Rdf4C_get_serializer(SERIALIZERTYPE_TURTLE);
 	} else if (0==strcmp(ext, "trig")) {
 		return Mime2Rdf4C_get_serializer(SERIALIZERTYPE_TRIG);
-	} else if (strcmp(ext, "nq")) {
+	} else if (0==strcmp(ext, "nq")) {
 		return Mime2Rdf4C_get_serializer(SERIALIZERTYPE_NQUADS);
 	}
 	return NULL;
