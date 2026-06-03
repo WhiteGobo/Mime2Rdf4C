@@ -9,6 +9,7 @@ add_library(Mime2Rdf4C
 target_link_libraries(Mime2Rdf4C PUBLIC
 	CInterfaceOxJsonld
 	NQuadsRDF
+	CInterfaceOxTTL
 )
 
 target_include_directories(Mime2Rdf4C PUBLIC

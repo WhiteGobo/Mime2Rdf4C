@@ -21,6 +21,7 @@ endfunction()
 
 
 function(configure_roundtripTest basePath baseIri testdata_json testsuffix)
+	set(extras "")
 	string(JSON id GET ${testdata_json} "@id")
 	string(JSON type GET ${testdata_json} "@type")
 	string(JSON name GET ${testdata_json} "name")
@@ -30,6 +31,9 @@ function(configure_roundtripTest basePath baseIri testdata_json testsuffix)
 	string(CONCAT testuri ${baseIri} ${input})
 
 	set(testname "${testsuffix}${id}")
+	if (type MATCHES "DatasetTest")
+		list(APPEND extras "--needs-context-awarness")
+	endif()
 
 	add_test(
 		NAME "${testname}" COMMAND testdriver_roundtrip
@@ -37,6 +41,7 @@ function(configure_roundtripTest basePath baseIri testdata_json testsuffix)
 		"--purpose" ${purpose}
 		"--input" ${inputfile}
 		"--base-uri" ${testuri}
+		${extras}
 	)
 	set_property(TEST "${testname}" PROPERTY
 		LABELS "RoundtripTest"

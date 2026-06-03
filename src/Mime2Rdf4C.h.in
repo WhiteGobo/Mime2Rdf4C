@@ -15,10 +15,17 @@ typedef enum {
 } TERMTYPE;
 #endif
 
-static const char* Mime2Rdf4C_Parser_List[] = {
-	"application/json",
-	"text/nquads",
-	NULL,
+typedef struct mime2Rdf4CParserData {
+	const char* type;
+	bool is_context_aware;
+} Mime2Rdf4CParserData;
+
+static Mime2Rdf4CParserData Mime2Rdf4C_Parser_List[] = {
+	{.type="application/json", .is_context_aware=true},
+	{.type="text/nquads", .is_context_aware=true},
+	{.type="application/trig", .is_context_aware=true},
+	{.type="text/turtle", .is_context_aware=false},
+	{.type=NULL, .is_context_aware=false},
 };
 
 

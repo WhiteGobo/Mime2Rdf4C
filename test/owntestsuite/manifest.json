@@ -36,7 +36,7 @@
       "inputtype": "text/nquads"
     }, {
       "@id": "#t0027",
-      "@type": ["m2rdf4c:RoundtripTest"],
+      "@type": ["m2rdf4c:RoundtripTest", "DatasetTest"],
       "name": "Simple named graph (Wikidata)",
       "purpose": "Multiple graphs.",
       "input": "roundtrip/0027-in.nq",

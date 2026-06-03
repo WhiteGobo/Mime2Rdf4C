@@ -3,10 +3,13 @@
 #include <string.h>
 #include <CInterfaceOxJsonld.h>
 #include <NQuadsRDF.h>
+#include <CInterfaceOxTTL.h>
 
 typedef enum {
 	PARSERTYPE_JSONLD,
 	PARSERTYPE_NQUADS,
+	PARSERTYPE_TURTLE,
+	PARSERTYPE_TRIG,
 } PARSERTYPE;
 
 typedef struct mime2Rdf4C_ParserConfig {
@@ -14,29 +17,44 @@ typedef struct mime2Rdf4C_ParserConfig {
 	union {
 		void* config;
 		JSONLDConfig* jsonld_config;
+		TTLConfig* turtle_config;
+		TrigConfig* trig_config;
 	};
 } Mime2Rdf4C_ParserConfig;
 
 
 static Mime2Rdf4C_ParserConfig* Mime2Rdf4C_get_parser(PARSERTYPE t){
 	Mime2Rdf4C_ParserConfig* ret;
+	ret = malloc(sizeof(Mime2Rdf4C_ParserConfig));
 	switch (t){
 		case PARSERTYPE_JSONLD:
-			ret = malloc(sizeof(Mime2Rdf4C_ParserConfig));
 			ret->config = NULL;
 			ret->parserid = PARSERTYPE_JSONLD;
 			return ret;
 		case PARSERTYPE_NQUADS:
-			ret = malloc(sizeof(Mime2Rdf4C_ParserConfig));
 			ret->parserid = PARSERTYPE_NQUADS;
 			return ret;
+		case PARSERTYPE_TURTLE:
+			ret->config = NULL;
+			ret->parserid = PARSERTYPE_TURTLE;
+			return ret;
+		case PARSERTYPE_TRIG:
+			ret->config = NULL;
+			ret->parserid = PARSERTYPE_TRIG;
+			return ret;
+		default:
+			free(ret);
+			return NULL;
 	}
-	return NULL;
 }
 
 Mime2Rdf4C_ParserConfig* Mime2Rdf4C_get_parser_from_ext(const char* ext){
 	if(0==strcmp(ext, "json") || 0==strcmp(ext, "jsonld")){
 		return Mime2Rdf4C_get_parser(PARSERTYPE_JSONLD);
+	} else if (0==strcmp(ext, "ttl")) {
+		return Mime2Rdf4C_get_parser(PARSERTYPE_TURTLE);
+	} else if (0==strcmp(ext, "trig")) {
+		return Mime2Rdf4C_get_parser(PARSERTYPE_TRIG);
 	} else if (0==strcmp(ext, "nq")) {
 		return Mime2Rdf4C_get_parser(PARSERTYPE_NQUADS);
 	}
@@ -46,6 +64,10 @@ Mime2Rdf4C_ParserConfig* Mime2Rdf4C_get_parser_from_ext(const char* ext){
 Mime2Rdf4C_ParserConfig* Mime2Rdf4C_get_parser_from_mediatype(const char* type){
 	if( 0 == strcmp(type, "application/ld+json")|| 0==strcmp(type, "application/json")){
 		return Mime2Rdf4C_get_parser(PARSERTYPE_JSONLD);
+	} else if (0==strcmp(type, "text/turtle")) {
+		return Mime2Rdf4C_get_parser(PARSERTYPE_TURTLE);
+	} else if (0==strcmp(type, "application/trig")) {
+		return Mime2Rdf4C_get_parser(PARSERTYPE_TRIG);
 	} else if (0==strcmp(type, "text/nquads")) {
 		return Mime2Rdf4C_get_parser(PARSERTYPE_NQUADS);
 	}
@@ -62,6 +84,8 @@ void free_Mime2Rdf4CParserConfig(Mime2Rdf4C_ParserConfig* config){
 			}
 			break;
 		case PARSERTYPE_NQUADS:
+		case PARSERTYPE_TURTLE:
+		case PARSERTYPE_TRIG:
 			break;
 	}
 	free(config);
@@ -79,6 +103,8 @@ int Mime2Rdf4C_set_baseiri(Mime2Rdf4C_ParserConfig* config, const char* baseiri)
 			}
 			break;
 		case PARSERTYPE_NQUADS:
+		case PARSERTYPE_TURTLE:
+		case PARSERTYPE_TRIG:
 			break;
 		default:
 			return -1;
@@ -99,6 +125,8 @@ int Mime2Rdf4C_enable_LoadDocumentCallback_over_http(
 			}
 			break;
 		case PARSERTYPE_NQUADS:
+		case PARSERTYPE_TURTLE:
+		case PARSERTYPE_TRIG:
 			break;
 		default:
 			return -1;
@@ -119,6 +147,8 @@ int Mime2Rdf4C_enable_LoadDocumentCallback_for_localfiles(
 			}
 			break;
 		case PARSERTYPE_NQUADS:
+		case PARSERTYPE_TURTLE:
+		case PARSERTYPE_TRIG:
 			break;
 		default:
 			return -1;
@@ -141,6 +171,8 @@ int Mime2Rdf4C_enable_LoadDocumentCallback_for_relativefiles(
 			}
 			break;
 		case PARSERTYPE_NQUADS:
+		case PARSERTYPE_TURTLE:
+		case PARSERTYPE_TRIG:
 			break;
 		default:
 			return -1;
@@ -160,6 +192,10 @@ int64_t Mime2Rdf4C_parse(
 			return parse_jsonld(input, hook, hook_data, config->jsonld_config);
 		case PARSERTYPE_NQUADS:
 			return nquads_parse(input, hook, hook_data);
+		case PARSERTYPE_TURTLE:
+			return parse_ttl(input, hook, hook_data, config->turtle_config);
+		case PARSERTYPE_TRIG:
+			return parse_trig(input, hook, hook_data, config->trig_config);
 		default:
 			return -2;
 	}

@@ -11,6 +11,7 @@
 	"purpose": "http://schema.org/description",
 	"input": "mf:input",
 	"baseIRI": {"@id": "tsc:baseIRI", "@type": "@id"},
-	"inputtype": "mf:inputtype"
+	"inputtype": "mf:inputtype",
+	"DatasetTest": "m2rdf4c:DatasetTest"
 }
 }

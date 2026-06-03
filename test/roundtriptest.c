@@ -22,6 +22,7 @@ const char* purpose = NULL;
 const char* inputfile = NULL;
 const char* base_uri = NULL;
 const char* inputformat = NULL;
+bool needs_context_awarness = false;
 
 
 
@@ -65,6 +66,7 @@ static struct option parse_options[] = {
 	{"input", required_argument, NULL, 'i'},
 	{"inputformat", required_argument, NULL, 'f'},
 	{"base-uri", required_argument, NULL, 'b'},
+	{"needs-context-awarness", no_argument, NULL, 'a'},
         {NULL, 0, NULL, 0}
 };
 
@@ -94,6 +96,9 @@ static int parse_args(int argc, char *argv[]){
 			case 'b':
 				fprintf(stderr, "baseuri: %s\n", optarg);
 				base_uri = optarg;
+				break;
+			case 'a':
+				needs_context_awarness = true;
 				break;
 			default:
 				fprintf(stderr, "unrecognized argument\n");
@@ -172,23 +177,35 @@ char* load_initial_string(){
 
 char* roundtrip(const char* initial, const char* starttype){
 	int i=0;
-	const char* last = starttype;
-	const char* next;
+	const char* last_type = starttype;
+	Mime2Rdf4CParserData* next;
 	char* new_data;
 	char* data = malloc(strlen(initial));
 	strcpy(data, initial);
-	for (int i = 0; Mime2Rdf4C_Parser_List[i] != NULL; i++){
-		next = Mime2Rdf4C_Parser_List[i];
-		if (0 == strcmp(next, starttype)){
+	for (int i = 0; Mime2Rdf4C_Parser_List[i].type != NULL; i++){
+		next = &Mime2Rdf4C_Parser_List[i];
+		if (needs_context_awarness) {
+			fprintf(stderr, "needs context awareness\n");
+		}
+		if (next->is_context_aware) {
+			fprintf(stderr, "\"%s\" is context aware\n", next->type);
+		} else {
+			fprintf(stderr, "\"%s\" is not context aware\n", next->type);
+		}
+		if (needs_context_awarness && !next->is_context_aware) {
+			fprintf(stderr, "skip\n");
 			continue;
 		}
-		new_data = transform_media(data, last, next);
+		if (0 == strcmp(next->type, starttype)){
+			continue;
+		}
+		new_data = transform_media(data, last_type, next->type);
 		free(data);
 		data = new_data;
-		last = next;
+		last_type = next->type;
 		if (data==NULL) return NULL;
 	}
-	new_data = transform_media(data, last, starttype);
+	new_data = transform_media(data, last_type, starttype);
 	free(data);
 	return new_data;
 }
@@ -202,7 +219,7 @@ static char* transform_media(const char* data, const char* last, const char* nex
 	parser_cfg = Mime2Rdf4C_get_parser_from_mediatype(last);
 	serializer_cfg = Mime2Rdf4C_get_serializer_from_mediatype(next);
 	if (serializer_cfg == NULL){
-		fprintf(stderr, "failed to load serializer for %s\n", next);
+		fprintf(stderr, "failed to load serializer for \"%s\"\n", next);
 		return NULL;
 	}
 

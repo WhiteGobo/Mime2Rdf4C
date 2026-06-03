@@ -38,5 +38,5 @@ extract_info_from_jsonld_manifest(
 math(EXPR range "${testlist_length} - 1")
 foreach(x RANGE 0 ${range})
 	string(JSON data GET ${testlist} ${x})
-	configure_roundtripTest(${tmpbase} ${baseIri} ${data} "roundtrip-" )
+	configure_roundtripTest(${tmpbase} ${baseIri} ${data} "Mime2Rdf4C::roundtrip::" )
 endforeach()
