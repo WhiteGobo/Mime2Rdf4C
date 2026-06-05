@@ -26,21 +26,13 @@ typedef struct mime2Rdf4C_ParserConfig {
 static Mime2Rdf4C_ParserConfig* Mime2Rdf4C_get_parser(PARSERTYPE t){
 	Mime2Rdf4C_ParserConfig* ret;
 	ret = malloc(sizeof(Mime2Rdf4C_ParserConfig));
+	ret->config = NULL;
+	ret->parserid = t;
 	switch (t){
 		case PARSERTYPE_JSONLD:
-			ret->config = NULL;
-			ret->parserid = PARSERTYPE_JSONLD;
-			return ret;
 		case PARSERTYPE_NQUADS:
-			ret->parserid = PARSERTYPE_NQUADS;
-			return ret;
 		case PARSERTYPE_TURTLE:
-			ret->config = NULL;
-			ret->parserid = PARSERTYPE_TURTLE;
-			return ret;
 		case PARSERTYPE_TRIG:
-			ret->config = NULL;
-			ret->parserid = PARSERTYPE_TRIG;
 			return ret;
 		default:
 			free(ret);

@@ -115,23 +115,21 @@ char* Mime2Rdf4C_finish(Mime2Rdf4C_SerializerConfig* config){
 static Mime2Rdf4C_SerializerConfig* Mime2Rdf4C_get_serializer(SERIALIZERTYPE t){
 	Mime2Rdf4C_SerializerConfig* ret;
 	ret = malloc(sizeof(Mime2Rdf4C_SerializerConfig));
+	ret->serializerid = t;
 	switch(t){
 		case SERIALIZERTYPE_JSONLD:
-			ret->serializerid = SERIALIZERTYPE_JSONLD;
 			ret->jsonld_config = JSONLD_SER_start();
 			return ret;
 		case SERIALIZERTYPE_NQUADS:
-			ret->serializerid = SERIALIZERTYPE_NQUADS;
 			ret->nquads_config = NQuadsRDF_SER_start();
 			return ret;
 		case SERIALIZERTYPE_TURTLE:
-			ret->serializerid = SERIALIZERTYPE_TURTLE;
 			ret->turtle_config = TTL_SER_start();
 			return ret;
 		case SERIALIZERTYPE_TRIG:
-			ret->serializerid = SERIALIZERTYPE_TRIG;
 			ret->trig_config = Trig_SER_start();
 			return ret;
 	}
+	free(ret);
 	return NULL;
 }

@@ -1,25 +1,6 @@
 include(CTest)
 include(manifest.cmake)
 
-FetchContent_Declare(
-        BasicRDFGraphComparator
-        GIT_REPOSITORY https://github.com/WhiteGobo/BasicRDFGraphComparator.git
-        GIT_TAG 0a7b9393534410536d35375d2b8017c9c807f3ab
-	EXCLUDE_FROM_ALL #dont install, its just for testing
-        FIND_PACKAGE_ARGS
-)
-FetchContent_MakeAvailable(BasicRDFGraphComparator)
-
-FetchContent_Declare(
-        cwalk
-        GIT_REPOSITORY https://github.com/likle/cwalk.git
-	GIT_TAG v1.2.9
-	EXCLUDE_FROM_ALL #dont install, its just for testing
-	FIND_PACKAGE_ARGS
-)
-
-FetchContent_MakeAvailable(cwalk)
-
 add_executable(testdriver_roundtrip
 	roundtriptest.c
 )
