@@ -7,6 +7,13 @@
   "baseIri": "https://WhiteGobo.github.io/Mime2Rdf4C/test/owntestsuite/",
   "sequence": [
     {
+      "@id": "#t0000",
+      "@type": ["m2rdf4c:RoundtripTest"],
+      "name": "Empty data",
+      "purpose": "test that empty data can be processed",
+      "input": "roundtrip/0000-in.nq",
+      "inputtype": "text/nquads"
+    }, {
       "@id": "#t0001",
       "@type": ["m2rdf4c:RoundtripTest"],
       "name": "qq1",

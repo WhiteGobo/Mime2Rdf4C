@@ -45,6 +45,7 @@ int main(int argc, char *argv[]){
 	}
 	last = roundtrip(initial, starttype);
 	if (last == NULL){
+		free(initial);
 		fprintf(stderr, "roundtrip failed.");
 		exit(EXIT_FAILURE);
 	}
@@ -180,7 +181,7 @@ char* roundtrip(const char* initial, const char* starttype){
 	const char* last_type = starttype;
 	Mime2Rdf4CParserData* next;
 	char* new_data;
-	char* data = malloc(strlen(initial));
+	char* data = malloc(strlen(initial)+1);
 	strcpy(data, initial);
 	for (int i = 0; Mime2Rdf4C_Parser_List[i].type != NULL; i++){
 		next = &Mime2Rdf4C_Parser_List[i];
@@ -225,6 +226,7 @@ static char* transform_media(const char* data, const char* last, const char* nex
 
 	err = Mime2Rdf4C_parse(data, (TripleHandler*) Mime2Rdf4C_add,
 			serializer_cfg, parser_cfg);
+	free_Mime2Rdf4CParserConfig(parser_cfg);
 	if (err != 0){
 		fprintf(stderr, "Failed to parse.");
 		return NULL;
