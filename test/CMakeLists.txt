@@ -1,6 +1,12 @@
 include(CTest)
 include(manifest.cmake)
 
+add_executable(testdriver_emptyserializer emptyserializer.c)
+target_link_libraries(testdriver_emptyserializer Mime2Rdf4C)
+add_test(NAME "Mime2Rdf4C::emptyserializer"
+	COMMAND testdriver_emptyserializer
+)
+
 add_executable(testdriver_roundtrip
 	roundtriptest.c
 )
