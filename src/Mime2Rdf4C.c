@@ -4,12 +4,14 @@
 #include <CInterfaceOxJsonld.h>
 #include <NQuadsRDF.h>
 #include <CInterfaceOxTTL.h>
+#include <CInterfaceRIF.h>
 
 typedef enum {
 	PARSERTYPE_JSONLD,
 	PARSERTYPE_NQUADS,
 	PARSERTYPE_TURTLE,
 	PARSERTYPE_TRIG,
+	PARSERTYPE_RIFPS,
 } PARSERTYPE;
 
 typedef struct mime2Rdf4C_ParserConfig {
@@ -33,6 +35,7 @@ static Mime2Rdf4C_ParserConfig* Mime2Rdf4C_get_parser(PARSERTYPE t){
 		case PARSERTYPE_NQUADS:
 		case PARSERTYPE_TURTLE:
 		case PARSERTYPE_TRIG:
+		case PARSERTYPE_RIFPS:
 			return ret;
 		default:
 			free(ret);
@@ -49,6 +52,8 @@ Mime2Rdf4C_ParserConfig* Mime2Rdf4C_get_parser_from_ext(const char* ext){
 		return Mime2Rdf4C_get_parser(PARSERTYPE_TRIG);
 	} else if (0==strcmp(ext, "nq")) {
 		return Mime2Rdf4C_get_parser(PARSERTYPE_NQUADS);
+	} else if (0==strcmp(ext, "rifps")) {
+		return Mime2Rdf4C_get_parser(PARSERTYPE_RIFPS);
 	}
 	return NULL;
 }
@@ -62,6 +67,8 @@ Mime2Rdf4C_ParserConfig* Mime2Rdf4C_get_parser_from_mediatype(const char* type){
 		return Mime2Rdf4C_get_parser(PARSERTYPE_TRIG);
 	} else if (0==strcmp(type, "text/nquads")) {
 		return Mime2Rdf4C_get_parser(PARSERTYPE_NQUADS);
+	} else if (0==strcmp(type, "text/rifps")) {
+		return Mime2Rdf4C_get_parser(PARSERTYPE_RIFPS);
 	}
 	return NULL;
 }
@@ -78,6 +85,7 @@ void free_Mime2Rdf4CParserConfig(Mime2Rdf4C_ParserConfig* config){
 		case PARSERTYPE_NQUADS:
 		case PARSERTYPE_TURTLE:
 		case PARSERTYPE_TRIG:
+		case PARSERTYPE_RIFPS:
 			break;
 	}
 	free(config);
@@ -97,6 +105,7 @@ int Mime2Rdf4C_set_baseiri(Mime2Rdf4C_ParserConfig* config, const char* baseiri)
 		case PARSERTYPE_NQUADS:
 		case PARSERTYPE_TURTLE:
 		case PARSERTYPE_TRIG:
+		case PARSERTYPE_RIFPS:
 			break;
 		default:
 			return -1;
@@ -119,6 +128,7 @@ int Mime2Rdf4C_enable_LoadDocumentCallback_over_http(
 		case PARSERTYPE_NQUADS:
 		case PARSERTYPE_TURTLE:
 		case PARSERTYPE_TRIG:
+		case PARSERTYPE_RIFPS:
 			break;
 		default:
 			return -1;
@@ -141,6 +151,7 @@ int Mime2Rdf4C_enable_LoadDocumentCallback_for_localfiles(
 		case PARSERTYPE_NQUADS:
 		case PARSERTYPE_TURTLE:
 		case PARSERTYPE_TRIG:
+		case PARSERTYPE_RIFPS:
 			break;
 		default:
 			return -1;
@@ -165,6 +176,7 @@ int Mime2Rdf4C_enable_LoadDocumentCallback_for_relativefiles(
 		case PARSERTYPE_NQUADS:
 		case PARSERTYPE_TURTLE:
 		case PARSERTYPE_TRIG:
+		case PARSERTYPE_RIFPS:
 			break;
 		default:
 			return -1;
@@ -188,6 +200,8 @@ int64_t Mime2Rdf4C_parse(
 			return parse_ttl(input, hook, hook_data, config->turtle_config);
 		case PARSERTYPE_TRIG:
 			return parse_trig(input, hook, hook_data, config->trig_config);
+		case PARSERTYPE_RIFPS:
+			return parse_rifps(input, hook, hook_data, config->config);
 		default:
 			return -2;
 	}

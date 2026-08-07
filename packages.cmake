@@ -23,6 +23,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(CInterfaceOxTTL)
 
+FetchContent_Declare(
+	CInterfaceRIF
+	GIT_REPOSITORY https://github.com/WhiteGobo/CInterfaceRIF.git
+	FIND_PACKAGE_ARGS
+)
+FetchContent_MakeAvailable(CInterfaceRIF)
 
 #packages needed for testing:
 
