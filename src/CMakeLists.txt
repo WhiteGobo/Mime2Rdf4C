@@ -3,6 +3,7 @@ configure_file(Mime2Rdf4C.h.in "${PROJECT_BINARY_DIR}/Mime2Rdf4C.h")
 add_library(Mime2Rdf4C
 	Mime2Rdf4C.c
 	Mime2Rdf4CSerializer.c
+	utils.c
 	"${PROJECT_BINARY_DIR}/Mime2Rdf4C.h"
 )
 

@@ -44,6 +44,9 @@ static Mime2Rdf4C_ParserConfig* Mime2Rdf4C_get_parser(PARSERTYPE t){
 }
 
 Mime2Rdf4C_ParserConfig* Mime2Rdf4C_get_parser_from_ext(const char* ext){
+	if(ext[0] == '.'){
+		ext = ext+1;
+	}
 	if(0==strcmp(ext, "json") || 0==strcmp(ext, "jsonld")){
 		return Mime2Rdf4C_get_parser(PARSERTYPE_JSONLD);
 	} else if (0==strcmp(ext, "ttl")) {

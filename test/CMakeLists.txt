@@ -1,4 +1,6 @@
 include(CTest)
+add_subdirectory(utils)
+
 include(manifest.cmake)
 
 add_executable(testdriver_emptyserializer emptyserializer.c)
